@@ -55,7 +55,7 @@ class PublicationController extends Controller
 
         $MAX_ELEMENTS_TO_SHOW = 20;
 
-        $publications = Publication::with('user')
+        $publications = Publication::with(['user', 'comments.user'])
             ->orderBy('created_at', 'desc')
             ->paginate($MAX_ELEMENTS_TO_SHOW, ['*'], 'page', $page);
 

@@ -16,9 +16,10 @@ class PublicationFactory extends Factory
      */
     public function definition(): array
     {
-        $seed = $this->faker->unique()->numberBetween(1, 100000);
+        $faker = \Faker\Factory::create();
+        $faker->addProvider(new \Smknstd\FakerPicsumImages\FakerPicsumImagesProvider($faker));
         return [
-            'image' => 'https://loremflickr.com/640/480/nature?lock='.$seed,
+            'image' => $faker->imageUrl(width: 800, height: 600),
             'description' => $this->faker->paragraph(($this->faker->numberBetween(1, 10))),
             'user_id' => User::inRandomOrder()->first()->id,
             'likes' => $this->faker->numberBetween(1, 10000)
