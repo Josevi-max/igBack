@@ -27,6 +27,11 @@ class Publication extends Model
         return $this->hasMany(Commentary::class, 'publication_id');
     }
 
+    public function likes()
+    {
+        return $this->hasMany(likes::class, 'publication_id');
+    }
+
     public static function rules()
     {
         return [

@@ -39,6 +39,8 @@ Route::group([
     Route::get('/page/{page}', [PublicationController::class, 'getListPublications'])->middleware('auth:api')->name('getListPublications');
     Route::get('/{id}', [PublicationController::class, 'getPublicationById'])->middleware('auth:api')->name('getPublicationById');
     Route::get('/user/{userId}', [PublicationController::class, 'getPublicationsUser'])->middleware('auth:api')->name('getPublicationsUser');
+    Route::post('/like', [PublicationController::class, 'likePublication'])->middleware('auth:api')->name('likePublication');
+    Route::post('/unlike', [PublicationController::class, 'unlikePublication'])->middleware('auth:api')->name('unlikePublication');
 });
 
 Route::group([
