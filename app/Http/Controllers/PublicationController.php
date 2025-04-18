@@ -7,6 +7,7 @@ use App\Models\likes;
 use App\Models\Publication;
 use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Validator;
 
 class PublicationController extends Controller
@@ -55,10 +56,24 @@ class PublicationController extends Controller
         }
 
         $MAX_ELEMENTS_TO_SHOW = 20;
-
+        $authUserId = Auth::id();
         $publications = Publication::with(['user', 'comments.user'])
             ->orderBy('created_at', 'desc')
             ->paginate($MAX_ELEMENTS_TO_SHOW, ['*'], 'page', $page);
+
+        $publicationIds = $publications->getCollection()->pluck('id')->toArray();
+
+        $likedPublicationIds = likes::where('user_id', $authUserId)
+            ->whereIn('publication_id', $publicationIds)
+            ->pluck('publication_id')
+            ->toArray();
+
+        $publications->setCollection(
+            $publications->getCollection()->map(function ($publication) use ($likedPublicationIds) {
+                $publication->liked_by_auth_user = in_array($publication->id, $likedPublicationIds);
+                return $publication;
+            })
+        );
 
         return response()->json(['status' => 'OK', 'response' => $publications]);
     }
