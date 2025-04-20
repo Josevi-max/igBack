@@ -5,12 +5,12 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class likes extends Model
+class likesCommentaries extends Model
 {
     use HasFactory;
-    protected $table = 'like_publications';
+    protected $table = 'like_commentaries';
     protected $fillable = [
-        'publication_id',
+        'commentary_id',
         'user_id'
     ];
 
@@ -18,8 +18,8 @@ class likes extends Model
     {
         return $this->belongsTo(User::class, 'user_id');
     }
-    public function publication()
+    public function commentary()
     {
-        return $this->belongsTo(Publication::class, 'publication_id');
+        return $this->belongsTo(Commentary::class, 'commentary_id');
     }
 }

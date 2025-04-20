@@ -29,7 +29,7 @@ class Publication extends Model
 
     public function likes()
     {
-        return $this->hasMany(likes::class, 'publication_id');
+        return $this->hasMany(likesPublications::class, 'publication_id');
     }
 
     public static function rules()

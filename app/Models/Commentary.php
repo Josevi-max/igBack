@@ -12,7 +12,9 @@ class Commentary extends Model
     protected $fillable = [
         'commentary',
         'publication_id',
-        'user_id'
+        'user_id',
+        'reply_to_id',
+        'reply_to_user_id'
     ];
 
     public function user()
@@ -23,12 +25,20 @@ class Commentary extends Model
     {
         return $this->belongsTo(Publication::class, 'publication_id');
     }
+
+    public function likes()
+    {
+        return $this->hasMany(likesCommentaries::class, 'commentary_id');
+    }
+
     public static function rules()
     {
         return [
             'commentary' => 'required|string|max:500',
             'publication_id' => 'required|exists:publications,id',
             'user_id' => 'required|exists:users,id',
+            'reply_to_id' => 'nullable|exists:commentaries,id',
+            'reply_to_user_id' => 'nullable|exists:users,id',
         ];
     }
 }

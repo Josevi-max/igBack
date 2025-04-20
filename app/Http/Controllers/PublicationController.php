@@ -3,7 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Controllers\Controller;
-use App\Models\likes;
+use App\Models\likesPublications;
 use App\Models\Publication;
 use App\Models\User;
 use Illuminate\Http\Request;
@@ -63,7 +63,7 @@ class PublicationController extends Controller
 
         $publicationIds = $publications->getCollection()->pluck('id')->toArray();
 
-        $likedPublicationIds = likes::where('user_id', $authUserId)
+        $likedPublicationIds = likesPublications::where('user_id', $authUserId)
             ->whereIn('publication_id', $publicationIds)
             ->pluck('publication_id')
             ->toArray();
@@ -88,7 +88,7 @@ class PublicationController extends Controller
         }
         $userId = $request->user()->id;
         $publicationId = $request->input('publicationId');
-        $alreadyLiked = likes::where('user_id', $userId)
+        $alreadyLiked = likesPublications::where('user_id', $userId)
             ->where('publication_id', $publicationId)
             ->exists();
         if ($alreadyLiked) {
@@ -119,7 +119,7 @@ class PublicationController extends Controller
         }
         $userId = $request->user()->id;
         $publicationId = $request->input('publicationId');
-        $alreadyLiked = likes::where('user_id', $userId)
+        $alreadyLiked = likesPublications::where('user_id', $userId)
             ->where('publication_id', $publicationId)
             ->exists();
         if (!$alreadyLiked) {
@@ -129,7 +129,7 @@ class PublicationController extends Controller
             ], 400);
         }
         try {
-            likes::where('publication_id', $publicationId)
+            likesPublications::where('publication_id', $publicationId)
                 ->where('user_id', $userId)
                 ->delete();
             Publication::find($publicationId)->decrement('likes');
