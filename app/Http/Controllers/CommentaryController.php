@@ -84,7 +84,7 @@ class CommentaryController extends Controller
             ->exists();
         if ($alreadyLiked) {
             return response()->json([
-                'status' => 'KO',
+                'status' => '400',
                 'message' => 'You have already liked this commentary'
             ], 400);
         }
@@ -95,7 +95,7 @@ class CommentaryController extends Controller
             return response()->json(['status' => 'OK']);
         } catch (\Exception $e) {
             return response()->json([
-                'status' => 'KO',
+                'status' => '400',
                 'message' => 'Error while liking the commentary',
                 'error' => $e->getMessage(),
             ], 500);
@@ -117,7 +117,7 @@ class CommentaryController extends Controller
             ->exists();
         if (!$alreadyLiked) {
             return response()->json([
-                'status' => 'KO',
+                'status' => '400',
                 'message' => 'You have not liked this commentary yet'
             ], 400);
         }
@@ -130,8 +130,22 @@ class CommentaryController extends Controller
             return response()->json(['status' => 'OK']);
         } catch (\Exception $e) {
             return response()->json([
-                'status' => 'KO',
+                'status' => '400',
                 'message' => 'Error while unliking the commentary',
+                'error' => $e->getMessage(),
+            ], 500);
+        }
+    }
+
+    public function getCommentaries($publicationId)
+    {
+        try {
+            $commentaries = Commentary::where('publication_id', $publicationId)->with(['user', 'likes'])->get();
+            return response()->json(['status' => 'OK', 'data' => $commentaries]);
+        } catch (\Exception $e) {
+            return response()->json([
+                'status' => 'KO',
+                'message' => 'Error while fetching commentaries',
                 'error' => $e->getMessage(),
             ], 500);
         }

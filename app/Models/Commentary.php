@@ -4,7 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-
+use Illuminate\Database\Eloquent\Casts\Attribute;
 class Commentary extends Model
 {
     use HasFactory;
@@ -16,6 +16,7 @@ class Commentary extends Model
         'reply_to_id',
         'reply_to_user_id'
     ];
+    protected $appends = ['is_liked'];
 
     public function user()
     {
@@ -29,6 +30,19 @@ class Commentary extends Model
     public function likes()
     {
         return $this->hasMany(likesCommentaries::class, 'commentary_id');
+    }
+
+    public function isLiked(): Attribute
+    {
+        return Attribute::make(
+            get: function () {
+                $userId = auth()->id(); // o pásalo manualmente si no usas auth()
+                if (!$userId) {
+                    return false;
+                }
+                return $this->likes()->where('user_id', $userId)->exists();
+            },
+        );
     }
 
     public static function rules()

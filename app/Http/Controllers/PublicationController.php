@@ -57,9 +57,14 @@ class PublicationController extends Controller
 
         $MAX_ELEMENTS_TO_SHOW = 20;
         $authUserId = Auth::id();
-        $publications = Publication::with(['user', 'comments.user'])
-            ->orderBy('created_at', 'desc')
-            ->paginate($MAX_ELEMENTS_TO_SHOW, ['*'], 'page', $page);
+        $publications = Publication::with([
+            'user',
+            'comments' => function ($query) {
+                $query->where('user_id', Auth::id());
+            }
+        ])
+        ->orderBy('created_at', 'desc')
+        ->paginate($MAX_ELEMENTS_TO_SHOW, ['*'], 'page', $page);
 
         $publicationIds = $publications->getCollection()->pluck('id')->toArray();
 

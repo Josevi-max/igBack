@@ -49,6 +49,7 @@ Route::group([
 ], function ($router) {
     Route::post('/new-comment', [CommentaryController::class, 'newComment'])->middleware('auth:api')->name('newComment');
     Route::post('/reply-comment', [CommentaryController::class, 'replyComment'])->middleware('auth:api')->name('replyComment');
-    Route::post('/like', [CommentaryController::class, 'likeComment'])->middleware('auth:api')->name('likeComment');
-    Route::post('/unlike', [CommentaryController::class, 'unlikeComment'])->middleware('auth:api')->name('unlikeComment');
+    Route::post('/like', [CommentaryController::class, 'likeCommentary'])->middleware('auth:api')->name('likeComment');
+    Route::post('/unlike', [CommentaryController::class, 'unlikeCommentary'])->middleware('auth:api')->name('unlikeComment');
+    Route::get('/get-commentaries/{publicationId}', [CommentaryController::class, 'getCommentaries'])->middleware('auth:api')->name('getCommentaries');
 });
